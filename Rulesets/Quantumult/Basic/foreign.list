@@ -61,6 +61,7 @@ host-suffix,cloudfront.net,proxy
 host-suffix,cloudmagic.com,proxy
 host-suffix,cmail19.com,proxy
 host-suffix,cnet.com,proxy
+host-suffix,cnn.com,proxy
 host-suffix,cocoapods.org,proxy
 host-suffix,comodoca.com,proxy
 host-suffix,crashlytics.com,proxy
@@ -199,6 +200,8 @@ host-suffix,playstation.net,proxy
 host-suffix,playstationnetwork.com,proxy
 host-suffix,pushwoosh.com,proxy
 host-suffix,rime.im,proxy
+host-keyword,reddit,proxy
+host-suffix,redd.it,proxy
 host-suffix,servebom.com,proxy
 host-suffix,sfx.ms,proxy
 host-suffix,shadowsocks.org,proxy
@@ -211,6 +214,7 @@ host-suffix,sndcdn.com,proxy
 host-suffix,sony.com,proxy
 host-suffix,soundcloud.com,proxy
 host-suffix,sourceforge.net,proxy
+host-suffix,speedtest.net,direct
 host-suffix,spotify.com,proxy
 host-suffix,squarespace.com,proxy
 host-suffix,sstatic.net,proxy
