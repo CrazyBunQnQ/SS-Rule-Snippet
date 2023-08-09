@@ -1,0 +1,770 @@
+#---------------------------------------------------#
+## 配置文件需要放置在 $HOME/.config/clash/config.yaml
+##
+## 如果您不知道如何操作，请参阅 SS-Rule-Snippet 的 Wiki：
+## https://github.com/Hackl0us/SS-Rule-Snippet/wiki/clash(X)
+
+## 关于 Clash Premium 的额外功能，请参考官方文档：
+## https://github.com/Dreamacro/clash/wiki/Premium-Core-Features
+#---------------------------------------------------#
+
+# HTTP 代理端口
+port: 7890
+
+# SOCKS5 代理端口
+socks-port: 7891
+
+# Linux 和 macOS 的 redir 透明代理端口 (重定向 TCP 和 TProxy UDP 流量)
+# redir-port: 7892
+
+# Linux 的透明代理端口（适用于 TProxy TCP 和 TProxy UDP 流量)
+# tproxy-port: 7893
+
+# 本地 SOCKS5/HTTP(S) 服务验证
+# authentication:
+#  - "user1:pass1"
+#  - "user2:pass2"
+
+# 允许局域网的连接（可用来共享代理）
+allow-lan: true
+bind-address: "*"
+# 此功能仅在 allow-lan 设置为 true 时生效，支持三种参数：
+# "*"                           绑定所有的 IP 地址
+# 192.168.122.11                绑定一个的 IPv4 地址
+# "[aaaa::a8aa:ff:fe09:57d8]"   绑定一个 IPv6 地址
+
+# Clash 路由工作模式
+# 规则模式：rule（规则） / global（全局代理）/ direct（全局直连）
+mode: rule
+
+# Clash 默认将日志输出至 STDOUT
+# 设置日志输出级别 (默认级别：silent，即不输出任何内容，以避免因日志内容过大而导致程序内存溢出）。
+# 5 个级别：silent / info / warning / error / debug。级别越高日志输出量越大，越倾向于调试，若需要请自行开启。
+log-level: silent
+
+# clash 的 RESTful API 监听地址
+external-controller: 127.0.0.1:9090
+
+# 存放配置文件的相对路径，或存放网页静态资源的绝对路径
+# Clash core 将会将其部署在 http://{{external-controller}}/ui
+# external-ui: folder
+
+# RESTful API 的口令 (可选)
+# 通过 HTTP 头中 Authorization: Bearer ${secret} 参数来验证口令
+# 当 RESTful API 的监听地址为 0.0.0.0 时，请务必设定口令以保证安全
+# secret: ""
+
+# 出站网卡接口
+# interface-name: en0
+
+# DNS 服务器和建立连接时的 静态 Hosts, 仅在 dns.enhanced-mode 模式为 redir-host 生效
+# 支持通配符域名 (例如: *.clash.dev, *.foo.*.example.com )
+# 不使用通配符的域名优先级高于使用通配符的域名 (例如: foo.example.com > *.example.com > .example.com )
+# 注意: +.foo.com 的效果等同于 .foo.com 和 foo.com
+hosts:
+# '*.clash.dev': 127.0.0.1
+# '.dev': 127.0.0.1
+# 'alpha.clash.dev': '::1'
+
+# DNS 服务器配置(可选；若不配置，程序内置的 DNS 服务会被关闭)
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  ipv6: true # 当此选项为 false 时, AAAA 请求将返回空
+
+  # 以下填写的 DNS 服务器将会被用来解析 DNS 服务的域名
+  # 仅填写 DNS 服务器的 IP 地址
+  default-nameserver:
+    - 223.5.5.5
+    - 114.114.114.114
+  enhanced-mode: fake-ip # 或 redir-host
+  fake-ip-range: 198.18.0.1/16 # Fake IP 地址池 (CIDR 形式)
+  # use-hosts: true # 查询 hosts 并返回 IP 记录
+
+  # 在以下列表的域名将不会被解析为 fake ip，这些域名相关的解析请求将会返回它们真实的 IP 地址
+  fake-ip-filter:
+    # 以下域名列表参考自 vernesong/OpenClash 项目，并由 Hackl0us 整理补充
+    - '*.localdomain'
+    - '*.example'
+    - '*.invalid'
+    - '*.localhost'
+    - '*.test'
+    - '*.local'
+    - '*.home.arpa'
+    # === LAN ===
+    - '*.lan'
+    # === Linksys Wireless Router ===
+    - '*.linksys.com'
+    - '*.linksyssmartwifi.com'
+    # === Apple Software Update Service ===
+    - 'swscan.apple.com'
+    - 'mesu.apple.com'
+    # === Windows 10 Connnect Detection ===
+    - '*.msftconnecttest.com'
+    - '*.msftncsi.com'
+    # === NTP Service ===
+    - 'time.*.com'
+    - 'time.*.gov'
+    - 'time.*.edu.cn'
+    - 'time.*.apple.com'
+    - 'time1.*.com'
+    - 'time2.*.com'
+    - 'time3.*.com'
+    - 'time4.*.com'
+    - 'time5.*.com'
+    - 'time6.*.com'
+    - 'time7.*.com'
+    - 'ntp.*.com'
+    - 'ntp1.*.com'
+    - 'ntp2.*.com'
+    - 'ntp3.*.com'
+    - 'ntp4.*.com'
+    - 'ntp5.*.com'
+    - 'ntp6.*.com'
+    - 'ntp7.*.com'
+    - '*.time.edu.cn'
+    - '*.ntp.org.cn'
+    - '+.pool.ntp.org'
+    - 'time1.cloud.tencent.com'
+    # === Music Service ===
+    ## NetEase
+    - 'music.163.com'
+    - '+.music.163.com'
+    - '*.126.net'
+    ## Baidu
+    - 'musicapi.taihe.com'
+    - 'music.taihe.com'
+    ## Kugou
+    - 'songsearch.kugou.com'
+    - 'trackercdn.kugou.com'
+    ## Kuwo
+    - '*.kuwo.cn'
+    ## JOOX
+    - 'api-jooxtt.sanook.com'
+    - 'api.joox.com'
+    - 'joox.com'
+    ## QQ
+    - '+.y.qq.com'
+    - '+.music.tc.qq.com'
+    - 'y.qq.com'
+    - '*.y.qq.com'
+    - 'streamoc.music.tc.qq.com'
+    - 'mobileoc.music.tc.qq.com'
+    - 'isure.stream.qqmusic.qq.com'
+    - 'dl.stream.qqmusic.qq.com'
+    - 'aqqmusic.tc.qq.com'
+    - 'amobile.music.tc.qq.com'
+    ## Xiami
+    - '*.xiami.com'
+    ## Migu
+    - '*.music.migu.cn'
+    - 'music.migu.cn'
+    - '*.msftconnecttest.com'
+    - '*.msftncsi.com'
+    - 'msftconnecttest.com'
+    - 'msftncsi.com'
+    - 'localhost.ptlogin2.qq.com'
+    - 'localhost.sec.qq.com'
+    # === Game Service ===
+    ## Nintendo Switch
+    - '+.srv.nintendo.net'
+    ## Sony PlayStation
+    - '+.stun.playstation.net'
+    ## Microsoft Xbox
+    - 'xbox.*.microsoft.com'
+    - '+.xboxlive.com'
+    - '+.battlenet.com.cn'
+    - '+.wotgame.cn'
+    - '+.wggames.cn'
+    - '+.wowsgame.cn'
+    - '+.wargaming.net'
+    # === Other ===
+    ## QQ Quick Login
+    - 'localhost.ptlogin2.qq.com'
+    ## Golang
+    - 'proxy.golang.org'
+    ## STUN Server
+    - 'stun.*.*'
+    - 'stun.*.*.*'
+    - '+.stun.*.*'
+    - '+.stun.*.*.*'
+    - '+.stun.*.*.*.*'
+    - 'heartbeat.belkin.com'
+    - '*.linksys.com'
+    - '*.linksyssmartwifi.com'
+    - '*.router.asus.com'
+    - 'mesu.apple.com'
+    - 'swscan.apple.com'
+    - 'swquery.apple.com'
+    - 'swdownload.apple.com'
+    - 'swcdn.apple.com'
+    - 'swdist.apple.com'
+    - 'lens.l.google.com'
+    - 'stun.l.google.com'
+    - '+.nflxvideo.net'
+    - '*.square-enix.com'
+    - '*.finalfantasyxiv.com'
+    - '*.ffxiv.com'
+
+
+    ## Bilibili CDN
+    - '*.mcdn.bilivideo.cn'
+
+  # 支持 UDP / TCP / DoT / DoH 协议的 DNS 服务，可以指明具体的连接端口号。
+  # 所有 DNS 请求将会直接发送到服务器，不经过任何代理。
+  # Clash 会使用最先获得的解析记录回复 DNS 请求
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+
+  # 当 fallback 参数被配置时, DNS 请求将同时发送至上方 nameserver 列表和下方 fallback 列表中配置的所有 DNS 服务器.
+  # 当解析得到的 IP 地址的地理位置不是 CN 时，clash 将会选用 fallback 中 DNS 服务器的解析结果。
+  # fallback:
+  #   - https://dns.google/dns-query
+
+  # 如果使用 nameserver 列表中的服务器解析的 IP 地址在下方列表中的子网中，则它们被认为是无效的，
+  # Clash 会选用 fallback 列表中配置 DNS 服务器解析得到的结果。
+  #
+  # 当 fallback-filter.geoip 为 true 且 IP 地址的地理位置为 CN 时，
+  # Clash 会选用 nameserver 列表中配置 DNS 服务器解析得到的结果。
+  #
+  # 当 fallback-filter.geoip 为 false, 如果解析结果不在 fallback-filter.ipcidr 范围内，
+  # Clash 总会选用 nameserver 列表中配置 DNS 服务器解析得到的结果。
+  #
+  # 采取以上逻辑进行域名解析是为了对抗 DNS 投毒攻击。
+  fallback-filter:
+    geoip: false
+    ipcidr:
+      - 0.0.0.0/8
+      - 10.0.0.0/8
+      - 100.64.0.0/10
+      - 127.0.0.0/8
+      - 169.254.0.0/16
+      - 172.16.0.0/12
+      - 192.0.0.0/24
+      - 192.0.2.0/24
+      - 192.88.99.0/24
+      - 192.168.0.0/16
+      - 198.18.0.0/15
+      - 198.51.100.0/24
+      - 203.0.113.0/24
+      - 224.0.0.0/4
+      - 240.0.0.0/4
+      - 255.255.255.255/32
+    domain:
+      - '+.google.com'
+      - '+.facebook.com'
+      - '+.youtube.com'
+      - '+.githubusercontent.com'
+      - '+.googlevideo.com'
+
+tun:
+  enable: false #如果需要启用 TUN 模式，请设置为 true
+  stack: system # 或 gvisor
+  macOS-auto-route: true
+  macOS-auto-detect-interface: true
+  dns-hijack:
+    - tcp://8.8.8.8:53
+    - tcp://8.8.4.4:53
+
+proxies:
+  # shadowsocks
+  # 支持加密方式：
+  #   aes-128-gcm aes-192-gcm aes-256-gcm
+  #   aes-128-cfb aes-192-cfb aes-256-cfb
+  #   aes-128-ctr aes-192-ctr aes-256-ctr
+  #   rc4-md5 chacha20 chacha20-ietf xchacha20
+  #   chacha20-ietf-poly1305 xchacha20-ietf-poly1305
+
+  - name: "ss1"
+    type: ss
+    server: server
+    port: 443
+    cipher: chacha20-ietf-poly1305
+    password: "password"
+    # udp: true
+
+  - name: "ss2"
+    type: ss
+    server: server
+    port: 443
+    cipher: AEAD_CHACHA20_POLY1305
+    password: "password"
+    plugin: obfs
+    plugin-opts:
+      mode: tls # 混淆模式，可以选择 http 或 tls
+      host: bing.com # 混淆域名，需要和服务器配置保持一致
+
+  - name: "ss3"
+    type: ss
+    server: server
+    port: 443
+    cipher: AEAD_CHACHA20_POLY1305
+    password: "password"
+    plugin: v2ray-plugin
+    plugin-opts:
+      mode: websocket # 暂时不支持 QUIC 协议
+      # tls: true # wss
+      # skip-cert-verify: true
+      # host: bing.com
+      # path: "/"
+      # headers:
+      #   custom: value
+
+  # vmess
+  # 支持加密方式：auto / aes-128-gcm / chacha20-poly1305 / none
+  - name: "vmess"
+    type: vmess
+    server: server
+    port: 443
+    uuid: uuid
+    alterId: 32
+    cipher: auto
+    # udp: true
+    # tls: true
+    # skip-cert-verify: true
+    # servername: example.com # 优先级高于 wss host
+    # network: ws
+    # ws-path: /path
+    # ws-headers:
+    #   Host: v2ray.com
+
+  - name: "vmess-http"
+    type: vmess
+    server: server
+    port: 443
+    uuid: uuid
+    alterId: 32
+    cipher: auto
+    # udp: true
+    # network: http
+    # http-opts:
+    #   # method: "GET"
+    #   # path:
+    #   #   - '/'
+    #   #   - '/video'
+    #   # headers:
+    #   #   Connection:
+    #   #     - keep-alive
+
+  # socks5
+  - name: "socks"
+    type: socks5
+    server: server
+    port: 443
+    # username: username
+    # password: password
+    # tls: true
+    # skip-cert-verify: true
+    # udp: true
+
+  # http
+  - name: "http"
+    type: http
+    server: server
+    port: 443
+    # username: username
+    # password: password
+    # tls: true # https
+    # skip-cert-verify: true
+
+  # snell (注意：暂时不支持 UDP 转发)
+  - name: "snell"
+    type: snell
+    server: server
+    port: 44046
+    psk: yourpsk
+    # obfs-opts:
+    # mode: http # 或 tls
+    # host: bing.com
+
+  # Trojan
+  - name: "trojan"
+    type: trojan
+    server: server
+    port: 443
+    password: yourpsk
+    # udp: true
+    # sni: example.com # 服务名称
+    # alpn:
+    #   - h2
+    #   - http/1.1
+    # skip-cert-verify: true
+
+  # ShadowsocksR
+  # 支持的加密方式: SS 中支持的所有流加密方式
+  # 支持的混淆方式:
+  #   plain http_simple http_post
+  #   random_head tls1.2_ticket_auth tls1.2_ticket_fastauth
+  # 支持的协议:
+  #   origin auth_sha1_v4 auth_aes128_md5
+  #   auth_aes128_sha1 auth_chain_a auth_chain_b
+  - name: "ssr"
+    type: ssr
+    server: server
+    port: 443
+    cipher: chacha20-ietf
+    password: "password"
+    obfs: tls1.2_ticket_auth
+    protocol: auth_sha1_v4
+    # obfs-param: domain.tld
+    # protocol-param: "#"
+    # udp: true
+
+proxy-groups:
+  - name: 代理
+    type: select
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+      - 自动代理
+  # url-test 可以自动代理与指定 URL 测速后，延迟最短的服务器
+  - name: 自动代理
+    type: url-test
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 300
+  - name: 电报消息
+    type: select
+    proxies:
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: BiliBili
+    type: select
+    proxies:
+      - DIRECT
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+  - name: YouTube
+    type: select
+    proxies:
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: TikTok
+    type: select
+    proxies:
+      - 美国节点
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: 'Netflix'
+    type: select
+    proxies:
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: 'Disney+'
+    type: select
+    proxies:
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: 'Emby'
+    type: select
+    proxies:
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: '隐私防护'
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+      - 代理
+  - name: '游戏平台'
+    type: select
+    proxies:
+      - DIRECT
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+  - name: '下载平台'
+    type: select
+    proxies:
+      - DIRECT
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+  - name: 'BT种子'
+    type: select
+    proxies:
+      - DIRECT
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+  - name: '国内流量'
+    type: select
+    proxies:
+      - DIRECT
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+  - name: '广告拦截'
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+  - name: '漏网之鱼'
+    type: select
+    proxies:
+      - 代理
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: '故障转移'
+    type: fallback
+    proxies:
+      - 自动代理
+      - ss1
+      - ss2
+      - vmess1
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 500
+  - name: 香港节点
+    type: select
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: 日本节点
+    type: select
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: 美国节点
+    type: select
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: 台湾节点
+    type: select
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: 新加坡节点
+    type: select
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: 欧洲节点
+    type: select
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  - name: ' 社交平台IP归属地'
+    type: select
+    proxies:
+      - DIRECT
+      - 代理
+  - name: 其他地区
+    type: select
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+      - DIRECT
+  # 代理的转发链, 在 proxies 中不应该包含 relay. 不支持 UDP.
+  # 流量: clash <-> http <-> vmess <-> ss1 <-> ss2 <-> 互联网
+  - name: "中继"
+    type: relay
+    proxies:
+      - http
+      - vmess
+      - ss1
+      - ss2
+  # load-balance 可以使相同 eTLD 请求在同一条代理线路上
+  - name: "负载均衡"
+    type: load-balance
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 500
+  - name: '使用 Provider'
+    type: select
+    use:
+      - provider1
+    proxies:
+      - Proxy
+      - DIRECT
+
+
+proxy-providers:
+  provider1:
+    type: http
+    url: "url"
+    interval: 3600
+    path: ./provider1.yaml
+    health-check:
+      enable: true
+      interval: 600
+      url: http://www.gstatic.com/generate_204
+  test:
+    type: file
+    path: /test.yaml
+    health-check:
+      enable: true
+      interval: 36000
+      url: http://www.gstatic.com/generate_204
+
+rule-providers:
+  IPfake:
+    type: http
+    behavior: classical
+    url: https://raw.fastgit.org/lwd-temp/anti-ip-attribution/main/generated/rule-provider.yaml
+    path: "./rule_provider/IPfake.yaml"
+    interval: 259200
+  BiliBili:
+    type: http
+    behavior: classical
+    url: https://raw.fastgit.org/blackmatrix7/ios_rule_script/master/rule/Clash/BiliBili/BiliBili.yaml
+    path: "./rule_provider/bilibili.yaml"
+    interval: 259200
+  Disney:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Disney/Disney.yaml
+    path: "./rule_provider/Disney.yaml"
+    interval: 259200
+  Netflix:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Netflix/Netflix.yaml
+    path: "./rule_provider/Netflix.yaml"
+    interval: 259200
+  TikTok:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/TikTok/TikTok.yaml
+    path: "./rule_provider/TikTok.yaml"
+    interval: 259200
+  YouTube:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/YouTube/YouTube.yaml
+    path: "./rule_provider/YouTube.yaml"
+    interval: 259200
+  Telegram:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Telegram/Telegram.yaml
+    path: "./rule_provider/Telegram.yaml"
+    interval: 259200
+  Emby:
+    type: http
+    behavior: classical
+    url: https://raw.fastgit.org/justdoiting/emby-rules/main/Emby.yaml
+    path: "./rule_provider/Emby.yaml"
+    interval: 259200
+  Game:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Game/Game.yaml
+    path: "./rule_provider/Game.yaml"
+    interval: 259200
+  BanEasyPrivacy:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Privacy/Privacy_Classical.yaml
+    path: "./rule_provider/BanEasyPrivacy.yaml"
+    interval: 259200
+  Advertising:
+    type: http
+    behavior: classical
+    url: https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/AdvertisingLite/AdvertisingLite_Classical.yaml
+    path: "./rule_provider/Advertising.yaml"
+    interval: 259200
+  Download:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Download/Download.yaml
+    path: "./rule_provider/Download.yaml"
+    interval: 259200
+  PrivateTracker:
+    type: http
+    behavior: domain
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/PrivateTracker/PrivateTracker.yaml
+    path: "./rule_provider/PrivateTracker.yaml"
+    interval: 259200
+  ChinaMax:
+    type: http
+    behavior: classical
+    url: https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaMaxNoIP/ChinaMaxNoIP_Classical.yaml
+    path: "./rule_provider/ChinaMax.yaml"
+    interval: 259200
+  Global:
+    type: http
+    behavior: classical
+    url: https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Global/Global_Classical.yaml
+    path: "./rule_provider/Global.yaml"
+    interval: 259200
+  Lan:
+    type: http
+    behavior: classical
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Lan/Lan.yaml
+    path: "./rule_provider/Lan.yaml"
+    interval: 259200
+
+rules:
+  # 自定义规则
+  ## 您可以在此处插入您补充的自定义规则（请注意保持缩进）
+  # - DOMAIN,baidu.com,DIRECT # 域名 直连
+  # - DOMAIN-SUFFIX,baidu.com,REJECT # 域名后缀 拒绝连接
+  # - RULE-SET,BiliBili,BiliBili # 使用规则集
+  # - DOMAIN-KEYWORD,bili,BiliBili # 域名关键词 使用指定组的连接配置
+  # - IP-CIDR,127.0.0.0/8,DIRECT # IP段 直连
+
+  # - 规则集
+  - RULE-SET,BiliBili,BiliBili
+  - RULE-SET,YouTube,YouTube
+  - RULE-SET,Netflix,Netflix
+  - RULE-SET,Disney,Disney+
+  - RULE-SET,TikTok,TikTok
+  - RULE-SET,Emby,Emby
+  - RULE-SET,Telegram,电报消息
+  - RULE-SET,Game,游戏平台
+  - RULE-SET,BanEasyPrivacy,隐私防护
+  - RULE-SET,Advertising,广告拦截
+  - RULE-SET,Download,下载平台
+  - RULE-SET,PrivateTracker,BT种子
+  - RULE-SET,IPfake,社交平台IP归属地
+  - RULE-SET,Lan,国内流量
+  - RULE-SET,Global,代理
+  - GEOIP,CN,DIRECT
+  # - 其它
+  - MATCH,漏网之鱼
